@@ -1,0 +1,4 @@
+-e git+https://git.direct-netware.de/dpt/runtime/#egg=dpt-runtime
+-e git+https://git.direct-netware.de/dpt/threading/#egg=dpt-threading
+
+-e git+https://git.direct-netware.de/dpt/builder_suite/#egg=dpt-builder-suite[gitsrc]
