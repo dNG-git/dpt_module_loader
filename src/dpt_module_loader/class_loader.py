@@ -208,6 +208,31 @@ name.
     #
 
     @staticmethod
+    def get_instance_in_namespace(namespace_package, _class, required = True, **kwargs):
+        """
+Returns a new instance based on the specified namespace, package and module
+name.
+
+:param namespace_package: Namespace package name
+:param _class: Package, module and class name
+:param required: True if exceptions should be thrown if the class is not
+                 defined.
+
+:return: (object) Requested object on success
+:since:  v1.0.0
+        """
+
+        _return = None
+
+        _class = ClassLoader.get_class_in_namespace(namespace_package, _class)
+
+        if (_class is not None and issubclass(_class, object)): _return = _class(**kwargs)
+        if (_return is None and required): raise IOException("Class '{0}' is not defined".format(_class))
+
+        return _return
+    #
+
+    @staticmethod
     def get_singleton(_class, required = True, **kwargs):
         """
 Returns a singleton based on the specified package, module and class name.

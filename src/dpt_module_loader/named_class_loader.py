@@ -134,6 +134,25 @@ Get the class name for the given namespace package and common name.
     #
 
     @staticmethod
+    def get_instance_in_namespace(namespace_package, common_name, required = True, **kwargs):
+        """
+Returns a new instance based on the specified namespace package and common
+name.
+
+:param namespace_package: Namespace package name
+:param common_name: Common name
+:param required: True if exceptions should be thrown if the class is not
+                 defined.
+
+:return: (object) Requested object on success
+:since:  v1.0.0
+        """
+
+        _class = NamedClassLoader.get_class_from_common_name(common_name)
+        return ClassLoader.get_instance_in_namespace(namespace_package, _class, required, **kwargs)
+    #
+
+    @staticmethod
     def get_singleton(common_name, required = True, **kwargs):
         """
 Returns a singleton based on its common name.
