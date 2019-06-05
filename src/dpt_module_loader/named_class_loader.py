@@ -76,24 +76,6 @@ Get the class name for the given common name.
     #
 
     @staticmethod
-    def get_instance(common_name, required = True, **kwargs):
-        """
-Returns a new instance based on its common name.
-
-:param common_name: Common name
-:param required: True if exceptions should be thrown if the class is not
-                 defined.
-:param autoload: True to load the class automatically if not done already
-
-:return: (object) Requested object on success
-:since:  v1.0.0
-        """
-
-        _class = NamedClassLoader.get_class_from_common_name(common_name)
-        return ClassLoader.get_instance(_class, required, **kwargs)
-    #
-
-    @staticmethod
     def get_class_from_common_name(common_name):
         """
 Returns the package, module and class name for the common one.
@@ -131,6 +113,24 @@ Get the class name for the given namespace package and common name.
 
         _class = NamedClassLoader.get_class_from_common_name(common_name)
         return ClassLoader.get_class_in_namespace(namespace_package, _class, autoload)
+    #
+
+    @staticmethod
+    def get_instance(common_name, required = True, **kwargs):
+        """
+Returns a new instance based on its common name.
+
+:param common_name: Common name
+:param required: True if exceptions should be thrown if the class is not
+                 defined.
+:param autoload: True to load the class automatically if not done already
+
+:return: (object) Requested object on success
+:since:  v1.0.0
+        """
+
+        _class = NamedClassLoader.get_class_from_common_name(common_name)
+        return ClassLoader.get_instance(_class, required, **kwargs)
     #
 
     @staticmethod
