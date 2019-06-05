@@ -199,9 +199,9 @@ name.
 
         _return = None
 
-        _class = ClassLoader.get_class(_class)
+        instance_class = ClassLoader.get_class(_class)
 
-        if (_class is not None and issubclass(_class, object)): _return = _class(**kwargs)
+        if (instance_class is not None and issubclass(instance_class, object)): _return = instance_class(**kwargs)
         if (_return is None and required): raise IOException("Class '{0}' is not defined".format(_class))
 
         return _return
@@ -224,9 +224,9 @@ name.
 
         _return = None
 
-        _class = ClassLoader.get_class_in_namespace(namespace_package, _class)
+        instance_class = ClassLoader.get_class_in_namespace(namespace_package, _class)
 
-        if (_class is not None and issubclass(_class, object)): _return = _class(**kwargs)
+        if (instance_class is not None and issubclass(instance_class, object)): _return = instance_class(**kwargs)
         if (_return is None and required): raise IOException("Class '{0}' is not defined".format(_class))
 
         return _return
@@ -247,11 +247,13 @@ Returns a singleton based on the specified package, module and class name.
 
         _return = None
 
-        _class = ClassLoader.get_class(_class)
+        singleton_class = ClassLoader.get_class(_class)
 
-        if (_class is None and required): raise IOException("Class '{0}' is not defined".format(_class))
+        if (singleton_class is None and required): raise IOException("Class '{0}' is not defined".format(_class))
 
-        if (hasattr(_class, "get_instance") and callable(_class.get_instance)): _return = _class.get_instance(**kwargs)
+        if (hasattr(singleton_class, "get_instance")
+            and callable(singleton_class.get_instance)
+           ): _return = singleton_class.get_instance(**kwargs)
         elif (required): raise TypeException("{0} has not defined a singleton".format(_class))
 
         return _return
