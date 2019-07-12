@@ -149,7 +149,7 @@ Get the module located in the specified namespace, package and module name.
         #
 
         if (_return is None):
-            _callable = (Loader._load_module if (autoload) else Loader._get_module)
+            _callable = (Loader._load_module_without_exception_logging if (autoload) else Loader._get_module)
             package_module_data = package_module.rsplit(".", 1)
 
             sub_package = (namespace_package
@@ -201,12 +201,13 @@ Returns the initialized Python module if applicable.
     #
 
     @staticmethod
-    def _import(package, module = None):
+    def _import(package, module = None, log_exceptions = True):
         """
 Imports the Python module.
 
 :param package: Package name
 :param module: Module name
+:param log_exceptions: True to log exceptions thrown
 
 :return: (object) Python module; None if unknown
 :since:  v1.0.0
@@ -221,13 +222,12 @@ Imports the Python module.
             with Loader._lock:
                 # Thread safety
                 _return = Loader._get_module(package, module)
+                _callable = (Loader._import_with_importlib if (_mode == _MODE_IMPORTLIB) else Loader._import_with_imp)
 
                 if (_return is None):
-                    try:
-                        if (_mode == _MODE_IMPORTLIB): _return = Loader._import_with_importlib(package, module)
-                        else: _return = Loader._import_with_imp(package, module)
+                    try: _return = _callable(package, module)
                     except Exception as handled_exception:
-                        if (Loader._log_handler is not None): Loader._log_handler.error(handled_exception, context = "dpt_module_loader")
+                        if (log_exceptions and Loader._log_handler is not None): Loader._log_handler.error(handled_exception, context = "dpt_module_loader")
                     #
                 #
             #
@@ -278,13 +278,9 @@ Imports the Python module with "imp".
 
         if (base_path is not None):
             with _imp_lock():
-                try:
-                    ( file_obj, file_path, description ) = imp.find_module(module, [ base_path ])
-                    _return = imp.load_module(package_module_name, file_obj, file_path, description)
-                    if (file_obj is not None): file_obj.close()
-                except ImportError as handled_exception:
-                    if (Loader._log_handler is not None): Loader._log_handler.debug(handled_exception, context = "dpt_module_loader")
-                #
+                ( file_obj, file_path, description ) = imp.find_module(module, [ base_path ])
+                _return = imp.load_module(package_module_name, file_obj, file_path, description)
+                if (file_obj is not None): file_obj.close()
             #
         #
 
@@ -311,13 +307,7 @@ Imports the Python module with "importlib".
         elif (module is None): package_module_name = package
         else: package_module_name = module
 
-        if (package_module_name is not None):
-            try: _return = importlib.import_module(package_module_name)
-            except ImportError as handled_exception:
-                if (Loader._log_handler is not None): Loader._log_handler.debug(handled_exception, context = "dpt_module_loader")
-            #
-        #
-
+        if (package_module_name is not None): _return = importlib.import_module(package_module_name)
         return _return
     #
 
@@ -339,9 +329,26 @@ resolved after auto loading it.
     #
 
     @staticmethod
-    def _load_module(package, module):
+    def _load_module(package, module, log_exceptions = True):
         """
 Loads the Python package and module.
+
+:param package: Package name
+:param module: Module name
+:param log_exceptions: True to log exceptions thrown
+
+:return: (object) Python module; None if unknown
+:since:  v1.0.0
+        """
+
+        if (package is not None): Loader._import(package, log_exceptions = log_exceptions)
+        return Loader._import(package, module, log_exceptions)
+    #
+
+    def _load_module_without_exception_logging(package, module):
+        """
+Loads the Python package and module without logging any traces of
+exceptions.
 
 :param package: Package name
 :param module: Module name
@@ -350,8 +357,7 @@ Loads the Python package and module.
 :since:  v1.0.0
         """
 
-        if (package is not None): Loader._import(package)
-        return Loader._import(package, module)
+        return Loader._load_module(package, module, False)
     #
 
     @staticmethod
