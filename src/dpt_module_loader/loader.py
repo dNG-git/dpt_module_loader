@@ -59,6 +59,11 @@ and class name given as "package.module:Class".
              Mozilla Public License, v. 2.0
     """
 
+    __slots__ = [ ]
+    """
+python.org: __slots__ reserves space for the declared variables and prevents
+the automatic creation of __dict__ and __weakref__ for each instance.
+    """
     _additional_base_dir = None
     """
 Additional base directory we search for python files
@@ -345,6 +350,7 @@ Loads the Python package and module.
         return Loader._import(package, module, log_exceptions)
     #
 
+    @staticmethod
     def _load_module_without_exception_logging(package, module):
         """
 Loads the Python package and module without logging any traces of
