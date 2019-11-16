@@ -17,7 +17,7 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 #echo(__FILEPATH__)#
 """
 
-# pylint: disable=import-error
+# pylint: disable=import-error,invalid-name
 
 from contextlib import contextmanager
 from os import path
@@ -268,7 +268,7 @@ Imports the Python module with "imp".
             package_module_name = "{0}.{1}".format(package, module)
         #
 
-        if (base_path_entry == ""): raise IOException("Import base path is empty".format(base_path_entry))
+        if (base_path_entry == ""): raise IOException("Import base path '{0}' is empty".format(base_path_entry))
 
         for _path in Loader.get_base_dirs():
             if (os.access(path.join(_path, base_path_entry), os.R_OK)):
@@ -379,6 +379,7 @@ Reloads the the specified package module.
         """
 
         # global: _mode, _MODE_IMPORTLIB
+        # pylint: disable=no-member
 
         _return = None
 
