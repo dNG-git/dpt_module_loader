@@ -212,11 +212,11 @@ and module name is defined or can be resolved after auto loading it.
     #
 
     @staticmethod
-    def reload(_class, clear_caches = True):
+    def reload(common_name, clear_caches = True):
         """
 Reloads the the specified package module.
 
-:param _class: Package, module and optional class name
+:param common_name: Common name
 :param clear_caches: True to clear import caches before reloading
 
 :return: (object) Reloaded module on success
