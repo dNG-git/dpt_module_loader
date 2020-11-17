@@ -166,7 +166,7 @@ Get the module located in the specified namespace, package and module name.
 
             for _path in Loader.get_base_dirs():
                 for dir_entry in os.listdir(_path):
-                    namespace_package_path = path.join(_path, dir_entry, namespace_package)
+                    namespace_package_path = path.join(_path, dir_entry, namespace_package.replace(".", path.sep))
                     package = "{0}.{1}".format(dir_entry, sub_package)
 
                     if (path.isdir(namespace_package_path)):
