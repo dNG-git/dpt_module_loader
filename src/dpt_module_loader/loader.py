@@ -25,8 +25,8 @@ from weakref import proxy
 import os
 import sys
 
-from dpt_runtime.io_exception import IOException
-from dpt_threading.thread_lock import ThreadLock
+from dpt_runtime.exceptions import IOException
+from dpt_threading import ThreadLock
 
 _MODE_IMP = 1
 """
