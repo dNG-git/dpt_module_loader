@@ -21,12 +21,13 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 
 from contextlib import contextmanager
 from os import path
-from weakref import proxy
 import os
 import sys
 
 from dpt_runtime.exceptions import IOException
 from dpt_threading import ThreadLock
+
+from .abstract_loader import AbstractLoader
 
 _MODE_IMP = 1
 """
@@ -45,10 +46,10 @@ except ImportError:
     _mode = _MODE_IMP
 #
 
-class Loader(object):
+class Loader(AbstractLoader):
     """
-"Loader" provides singletons and objects based on the package, module
-and class name given as "package.module:Class".
+"Loader" provides singletons and objects based on the package and module
+given as "package.module".
 
 :author:     direct Netware Group et al.
 :copyright:  direct Netware Group - All rights reserved
@@ -71,11 +72,6 @@ Additional base directory we search for python files
     _lock = ThreadLock()
     """
 Thread safety lock
-    """
-    _log_handler = None
-    """
-The log handler is called whenever debug messages should be logged or errors
-happened.
     """
     _namespace_modules_cache = { }
     """
@@ -410,19 +406,6 @@ Sets an additional base directory for scanning and loading python files.
         """
 
         Loader._additional_base_dir = path.abspath(base_dir)
-    #
-
-    @staticmethod
-    def set_log_handler(log_handler):
-        """
-Sets the log handler.
-
-:param log_handler: Log handler to use
-
-:since: v1.0.0
-        """
-
-        Loader._log_handler = proxy(log_handler)
     #
 #
 

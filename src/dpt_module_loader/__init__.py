@@ -17,6 +17,7 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 #echo(__FILEPATH__)#
 """
 
+from .abstract_loader import AbstractLoader
 from .class_loader import ClassLoader
 from .named_class_loader import NamedClassLoader
 from .loader import Loader
